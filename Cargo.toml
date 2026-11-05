@@ -1,0 +1,27 @@
+[workspace]
+resolver = "2"
+members = ["crates/echo-module-subagent"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.98"
+license = "MIT"
+repository = "https://github.com/EchoLab-Auto/agent-module-subagent"
+
+[workspace.dependencies]
+# Core 基础 crate；与 Core 保持同一 main 版本，避免跨版本 trait 不兼容。
+echo-defs = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
+echo-tool = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
+echo-federation = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
+echo-protocol = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
+
+anyhow = "1"
+async-trait = "0.1"
+chrono = "0.4"
+dashmap = "6"
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+tokio-util = { version = "0.7", features = ["rt"] }
+uuid = { version = "1", features = ["v4"] }
+tracing = "0.1"
