@@ -13,7 +13,7 @@ repository = "https://github.com/EchoLab-Auto/agent-module-subagent"
 # Core 基础 crate；与 Core 保持同一 main 版本，避免跨版本 trait 不兼容。
 echo-defs = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
 echo-tool = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
-echo-federation = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
+echo-federation = { package = "echo-agent-federation", git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
 echo-protocol = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
 
 anyhow = "1"
