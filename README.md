@@ -1,6 +1,6 @@
 # agent-module-subagent
 
-EchoAgent 的独立 Subagent 委派模块，crate 名为 `echo-module-subagent`。
+EchoAgent 的独立 Subagent 委派模块，crate 名为 `agent-module-subagent`。
 
 ## 功能
 
@@ -19,7 +19,7 @@ EchoAgent 的独立 Subagent 委派模块，crate 名为 `echo-module-subagent`�
 ## 接入
 
 ```toml
-echo-module-subagent = {
+agent-module-subagent = {
     git = "https://github.com/EchoLab-Auto/agent-module-subagent",
     branch = "main",
 }

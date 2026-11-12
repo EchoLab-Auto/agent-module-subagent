@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/echo-module-subagent"]
+members = ["crates/agent-module-subagent"]
 
 [workspace.package]
 version = "0.1.0"
@@ -12,8 +12,8 @@ repository = "https://github.com/EchoLab-Auto/agent-module-subagent"
 [workspace.dependencies]
 # Core 基础 crate；与 Core 保持同一 main 版本，避免跨版本 trait 不兼容。
 echo-defs = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
-echo-tool = { package = "echo-module-tools", git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
-echo-federation = { package = "echo-module-federation", git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
+echo-tool = { package = "agent-module-tools", git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
+echo-federation = { package = "agent-module-federation", git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
 echo-protocol = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
 
 anyhow = "1"

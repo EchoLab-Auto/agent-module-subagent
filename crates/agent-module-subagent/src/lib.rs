@@ -1,4 +1,4 @@
-//! # echo-module-subagent — Subagent 委派模块（解耦计划 Phase 3 ⑥）
+//! # agent-module-subagent — Subagent 委派模块（解耦计划 Phase 3 ⑥）
 //!
 //! `spawn_subagent` 编排工具 + 隔离上下文的子 agent 循环，原
 //! `echo-agent::packages::subagent` 的独立 crate 化。
@@ -267,8 +267,8 @@ pub struct SpawnSubagentTool {
 /// 远程委派的聚合登记接缝（宿主注入）。
 ///
 /// **定义在定义层**（`echo_defs::subagent`，2026-11 S12）：声明方是本模块
-/// （受理委派的一方），实现方是 `echo-module-federation`（聚合表的所有者）。
-/// 此前 trait 住在这里，于是联邦模块要 `impl echo_module_subagent::...` 才能
+/// （受理委派的一方），实现方是 `agent-module-federation`（聚合表的所有者）。
+/// 此前 trait 住在这里，于是联邦模块要 `impl agent_module_subagent::...` 才能
 /// 接上——聚合功能因此把两个模块绑成了 Cargo 依赖。
 ///
 /// 实现方（组合根）通常转调 `federation::aggregator::register_remote_subagent`。
