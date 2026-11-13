@@ -7,6 +7,7 @@
 id = "echo-agent.subagent"
 name = "Subagent 委派"
 kind = "tool"
-entry = "subagent"
 description = "委派独立子任务给隔离上下文的子 agent：spawn_subagent 工具 + 完成后 <subagent_event> hook 回灌主 agent"
 builtin = true
+# 随 Core 发布（编译进二进制），不随运行期配置变化。
+tag = "inner"
