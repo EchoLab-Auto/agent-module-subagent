@@ -30,6 +30,15 @@
 /// 模块声明文件——身份在 TOML 里（单一真值），由 Core 解析成 manifest。
 pub const MANIFEST_TOML: &str = include_str!("../module.toml");
 
+/// 模块 id（与 `module.toml` 的 `id` 同一字符串）。
+///
+/// **为什么单独导出**：宿主要用它做门控、包标签聚合与日志标注。此前宿主
+/// 自己写死一份同名字面量，模块改 id 时宿主不会编译失败——运行期表现为
+/// 「模块挂上了但门控认不出它」。词表归模块，宿主只引用。
+///
+/// 有测试钉住它与 `module.toml` 一致（两者分叉是静默的）。
+pub const MODULE_ID: &str = "echo-agent.subagent";
+
 /// 本模块贡献的技能正文（SKILL.md 全文，含 frontmatter）。
 ///
 /// **为什么技能随模块走**：`spawn_subagent` 这个工具由本 crate 实现，它怎么
@@ -1046,4 +1055,27 @@ pub fn subagent_task_field(task: &str) -> String {
 /// "取消被当成失败"报警到面板。
 pub fn is_turn_cancelled(error: &anyhow::Error) -> bool {
     error.to_string() == echo_defs::llm::TURN_CANCELLED
+}
+
+#[cfg(test)]
+mod module_id_tests {
+    use super::*;
+
+    /// `MODULE_ID` 与 `module.toml` 的 `id` 必须一致。
+    ///
+    /// 两者分叉是**静默**的：宿主用常量做门控、包标签与日志标注，而 manifest
+    /// 才是注册表里的身份——分叉的表现为「模块挂上了但门控认不出它」，或者
+    /// 面板上出现一个名字对不上的条目。
+    ///
+    /// 不用 `echo_module::ModuleManifest` 解析：本 crate 只依赖定义层，为一个
+    /// 断言引入模块机制不划算，而 manifest 的 `id` 是顶格 `id = "..."` 一行。
+    #[test]
+    fn module_id_matches_manifest() {
+        let declared = MANIFEST_TOML
+            .lines()
+            .find_map(|line| line.strip_prefix("id = "))
+            .map(|value| value.trim().trim_matches('"'))
+            .expect("module.toml 缺少顶层 id");
+        assert_eq!(declared, MODULE_ID);
+    }
 }
