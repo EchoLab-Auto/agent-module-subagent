@@ -27,6 +27,9 @@
 //!
 //! 设计文档见 `document/subagent.md`。
 
+/// 模块声明文件——身份在 TOML 里（单一真值），由 Core 解析成 manifest。
+pub const MANIFEST_TOML: &str = include_str!("../module.toml");
+
 pub mod execution;
 
 use std::sync::Arc;

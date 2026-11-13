@@ -1,0 +1,12 @@
+# Subagent 委派 —— 模块声明（**单一真值**：身份 + 依赖 + 提供）
+#
+# 本 crate 只暴露 `MANIFEST_TOML` 字符串，由 Core 解析成 manifest
+# （`source/modules/core/src/builtin_modules.rs` 的 `push_builtin_identity`）：
+# 模块的 mount 闭包在宿主侧（工具与循环都在 Core 里接线），crate 只提供工具实现。
+
+id = "echo-agent.subagent"
+name = "Subagent 委派"
+kind = "tool"
+entry = "subagent"
+description = "委派独立子任务给隔离上下文的子 agent：spawn_subagent 工具 + 完成后 <subagent_event> hook 回灌主 agent"
+builtin = true
