@@ -30,6 +30,17 @@
 /// 模块声明文件——身份在 TOML 里（单一真值），由 Core 解析成 manifest。
 pub const MANIFEST_TOML: &str = include_str!("../module.toml");
 
+/// 本模块贡献的技能正文（SKILL.md 全文，含 frontmatter）。
+///
+/// **为什么技能随模块走**：`spawn_subagent` 这个工具由本 crate 实现，它怎么
+/// 用、什么时候该用、失败了怎么停——全是本模块的领域知识。技能留在 Core 的
+/// `skills/` 里会出现「工具改了、技能还在教旧用法」以及「模块没装、技能却
+/// 在教一个不存在的工具」。
+///
+/// 只导出正文、不在这里解析：解析器属于技能模块（`agent-module-skills`），
+/// 本 crate 只依赖定义层，不认识文件格式的宿主侧实现。
+pub const SKILL_MARKDOWN: &str = include_str!("../skills/subagent-delegation/SKILL.md");
+
 pub mod execution;
 
 use std::sync::Arc;
