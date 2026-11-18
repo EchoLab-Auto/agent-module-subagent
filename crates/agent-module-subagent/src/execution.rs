@@ -177,10 +177,7 @@ pub fn spawn_execution(
             let cancel = store
                 .cancel_token_of(&task_id)
                 .unwrap_or_default();
-            host.emit(echo_protocol::BackendEvent::SubagentStarted {
-                session_id: session_id.clone(),
-                task: task.clone(),
-            });
+            // （原 `SubagentStarted` 位置：挪到 provider 解析之后，见下方 line ~257）
 
             // ── 上下文：提示词 + 工具视图（剥 spawn_subagent，单层委派）──
             let base = host.base_prompt().await;
@@ -255,6 +252,16 @@ pub fn spawn_execution(
                 },
                 None => host.inherit_provider().await,
             };
+            // SubagentStarted 刻意挪到 provider 解析之后：panel 详情头要显示
+            // 「运行 API · 模型」，而模型名只有解析完成才知道。profile 解析失败
+            // 走 reject 路径，不会到这里——panel 看到的运行中条目必然是已受理的。
+            let resolved_model = provider.default_model().to_string();
+            host.emit(echo_protocol::BackendEvent::SubagentStarted {
+                session_id: session_id.clone(),
+                task: task.clone(),
+                profile: profile.clone(),
+                model: Some(resolved_model.clone()),
+            });
             let (max_iterations, max_tokens) = host.loop_limits().await;
 
             // 联邦对端观测：远程子任务受理时通知对端（SubagentSpawn），
@@ -369,6 +376,8 @@ pub fn spawn_execution(
                 "result": detail,
                 "parent_branch_id": parent_branch_id,
                 "completed_at_ms": now_millis(),
+                "profile": profile,
+                "model": resolved_model,
             });
             host.deliver_hook(&session_id, wrap_subagent_event(&payload))
                 .await;
