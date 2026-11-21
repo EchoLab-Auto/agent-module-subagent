@@ -12,6 +12,8 @@ echo-defs = { workspace = true }
 echo-tool = { workspace = true }
 echo-federation = { workspace = true }
 echo-protocol = { workspace = true }
+echo-module = { workspace = true }
+echo-context = { workspace = true }
 anyhow = { workspace = true }
 async-trait = { workspace = true }
 chrono = { workspace = true }

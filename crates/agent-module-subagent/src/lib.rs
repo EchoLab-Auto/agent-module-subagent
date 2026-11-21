@@ -51,6 +51,12 @@ pub const MODULE_ID: &str = "echo-agent.subagent";
 pub const SKILL_MARKDOWN: &str = include_str!("../skills/subagent-delegation/SKILL.md");
 
 pub mod execution;
+/// 模块身份与 `mount`（技能随模块注册，见该文件的文档）。
+pub mod module;
+
+// 模块构造器在 crate 根：宿主写 `agent_module_subagent::module(version)`，
+// 与其它模块（prodoc / federation / transcript …）同一形状。
+pub use module::module;
 
 use std::sync::Arc;
 

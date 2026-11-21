@@ -15,6 +15,10 @@ echo-defs = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "m
 echo-tool = { package = "agent-module-tools", git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
 echo-federation = { package = "agent-module-federation", git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
 echo-protocol = { git = "https://github.com/EchoLab-Auto/EchoAgentCore", branch = "main" }
+# 框架仓（模块 trait / 挂载上下文）。tag 必须与 EchoAgentCore 根 Cargo.toml
+# 一致，否则同一进程里会出现两份 `Box<dyn Module>`。
+echo-module = { git = "https://github.com/EchoLab-Auto/echo-fabric-arch", tag = "v0.19.4" }
+echo-context = { git = "https://github.com/EchoLab-Auto/echo-fabric-arch", tag = "v0.19.4" }
 
 anyhow = "1"
 async-trait = "0.1"

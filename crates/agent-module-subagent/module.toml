@@ -1,8 +1,8 @@
 # Subagent 委派 —— 模块声明（**单一真值**：身份 + 依赖 + 提供）
 #
-# 本 crate 只暴露 `MANIFEST_TOML` 字符串，由 Core 解析成 manifest
-# （`source/modules/core/src/builtin_modules.rs` 的 `push_builtin_identity`）：
-# 模块的 mount 闭包在宿主侧（工具与循环都在 Core 里接线），crate 只提供工具实现。
+# 本 crate 自己提供 `module()`（见 `src/module.rs`）：`mount` 里把
+# `skills/subagent-delegation/SKILL.md` 交给技能模块登记。技能归属因此跟着
+# 挂载状态走——`enabled = false` 的部署不会在提示词里看到它。
 
 id = "echo-agent.subagent"
 name = "Subagent 委派"
@@ -11,3 +11,13 @@ description = "委派独立子任务给隔离上下文的子 agent：spawn_subag
 builtin = true
 # 随 Core 发布（编译进二进制），不随运行期配置变化。
 tag = "inner"
+
+# 技能注册接缝（`skills.dir` 提供）。**软依赖**：没有技能模块的宿主照样能
+# 用 `spawn_subagent`，只是提示词里少那段规则；反过来写成硬依赖会让"关掉
+# 技能目录"变成启动期故障，那不是本模块的权限。
+#
+# 声明它的第二个作用是**排序**：宿主按 requires + optional_requires 做服务
+# 依赖拓扑排序，技能模块因此会先挂载、注册接缝先就位。
+optional_requires = [
+    "echo-agent.host.skill_registrar",
+]
