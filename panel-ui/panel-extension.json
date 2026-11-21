@@ -1,0 +1,4 @@
+{
+  "id": "echo-agent.subagent",
+  "entry": "./index.ts"
+}
