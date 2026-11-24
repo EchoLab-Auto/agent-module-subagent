@@ -53,20 +53,60 @@ fn mount(mctx: &MountContext) -> echo_module::ModuleMountResult {
     let Some(ctx) = mctx.context() else {
         return Ok(Vec::new());
     };
+    let mut keeps = Vec::new();
+    keeps.extend(register_panel_ui(mctx));
     let Some(registrar) = ctx.service(&echo_defs::skill::SKILL_REGISTRAR) else {
         tracing::warn!(
             module = MODULE_ID,
             "技能注册接缝缺席：本模块的技能未进提示词（宿主未挂载 skills.dir）"
         );
-        return Ok(Vec::new());
+        return Ok(keeps);
     };
     if let Err(error) = registrar.register_markdown(MODULE_ID, CONTRIBUTED_SKILLS) {
         // 登记失败不阻止挂载：`spawn_subagent` 仍可用，缺的只是提示词里的
         // 那段规则。挂载失败会让整个委派能力消失，代价大得多。
         tracing::warn!(module = MODULE_ID, %error, "技能登记失败");
-        return Ok(Vec::new());
+        return Ok(keeps);
     }
-    Ok(vec![echo_defs::Disposer::from_fn(move || {
+    keeps.push(echo_defs::Disposer::from_fn(move || {
         registrar.unregister(MODULE_ID);
-    })])
+    }));
+    Ok(keeps)
+}
+
+/// 本模块的面板 UI 贡献（bundle 的站点相对路径）。
+///
+/// 固定路径不带 hash：面板运行期靠它 `import()`，名字一变所有已构建的扩展
+/// 立刻失联。
+pub const PANEL_UI_BUNDLE: &str = "panel-extensions/echo-agent.subagent/index.js";
+
+/// 面板 UI SDK 契约版本（与 Panel 仓 `panel-shared.entries.json` 一致）。
+pub const PANEL_UI_SDK_VERSION: &str = "1";
+
+/// 向 Core 登记本模块的面板 UI 贡献。
+///
+/// 注册表缺席是**降级**（嵌入式部署没有宿主），不算错误：面板本来就不会连
+/// 过来。登记失败也不阻止挂载——UI 是附加能力，缺了只是界面上少一块入口，
+/// 而 `spawn_subagent` 仍然可用。
+fn register_panel_ui(mctx: &MountContext) -> Vec<echo_defs::Disposer> {
+    let Some(registrar) = mctx.service(&echo_defs::panel_ui::PANEL_UI_REGISTRAR) else {
+        tracing::debug!(
+            module = MODULE_ID,
+            "宿主未提供面板 UI 注册表；本模块的界面入口不可用（嵌入式部署常见）"
+        );
+        return Vec::new();
+    };
+    let contribution = echo_defs::panel_ui::PanelUiContribution {
+        id: MODULE_ID.to_string(),
+        name: "Subagent".to_string(),
+        bundle: PANEL_UI_BUNDLE.to_string(),
+        sdk_version: PANEL_UI_SDK_VERSION.to_string(),
+    };
+    match registrar.register(contribution) {
+        Ok(disposer) => vec![disposer],
+        Err(error) => {
+            tracing::warn!(module = MODULE_ID, %error, "面板 UI 贡献登记失败");
+            Vec::new()
+        }
+    }
 }
