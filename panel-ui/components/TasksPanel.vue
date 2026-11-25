@@ -125,16 +125,16 @@ function cancel(sessionId: string) {
       :class="{ active: isActive(task.status) }"
     >
       <div class="task-head">
-        <NeumorphismTag size="small" variant="default">
+        <NeumorphismTag :size="11" variant="default">
           {{ KIND_LABEL[task.kind] ?? task.kind }}
         </NeumorphismTag>
-        <NeumorphismTag size="small" :variant="STATUS_VARIANT[task.status] ?? 'default'">
+        <NeumorphismTag :size="11" :variant="STATUS_VARIANT[task.status] ?? 'default'">
           {{ STATUS_LABEL[task.status] ?? task.status }}
         </NeumorphismTag>
         <span class="task-elapsed">{{ elapsed(task.createdAtMs) }}</span>
         <NeumorphismButton
           v-if="isActive(task.status) && task.sessionId"
-          size="small"
+          :size="32"
           variant="glass"
           @click="cancel(task.sessionId)"
         >
@@ -147,7 +147,7 @@ function cancel(sessionId: string) {
           <span class="task-branch-id">{{ branch.branchId }}</span>
           <span class="task-branch-task">{{ branch.task || '—' }}</span>
           <span class="task-branch-target muted">{{ branch.target }}</span>
-          <NeumorphismTag size="small" :variant="BRANCH_VARIANT[branch.status] ?? 'default'">
+          <NeumorphismTag :size="11" :variant="BRANCH_VARIANT[branch.status] ?? 'default'">
             {{ BRANCH_LABEL[branch.status] ?? branch.status }}
           </NeumorphismTag>
           <pre v-if="branch.result" class="task-branch-result">{{ branch.result }}</pre>
